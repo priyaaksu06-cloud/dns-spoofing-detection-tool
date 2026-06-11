@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  
+    <meta http-equiv="refresh" content="5">
+    <title>DNS Spoofing Dashboard</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#f4f4f4;
+            padding:30px;
+        }
+
+        h1{
+            text-align:center;
+        }
+
+        .cards{
+            display:flex;
+            gap:20px;
+            justify-content:center;
+            margin-bottom:40px;
+        }
+
+        .card{
+            background:white;
+            width:220px;
+            padding:25px;
+            border-radius:10px;
+            text-align:center;
+            box-shadow:0px 0px 10px lightgray;
+        }
+
+        .number{
+            font-size:40px;
+            font-weight:bold;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            background:white;
+        }
+
+        th,td{
+            border:1px solid lightgray;
+            padding:12px;
+            text-align:left;
+        }
+
+        th{
+            background:#eeeeee;
+        }
+
+        .safe{
+            color:green;
+            font-weight:bold;
+        }
+
+        .suspicious{
+            color:red;
+            font-weight:bold;
+        }
+
+        .new{
+            color:orange;
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>DNS Spoofing Detection Dashboard</h1>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Total Requests</h3>
+        <div class="number">{{ total_requests }}</div>
+    </div>
+
+    <div class="card">
+        <h3>Safe Requests</h3>
+        <div class="number">{{ safe_requests }}</div>
+    </div>
+
+    <div class="card">
+        <h3>Suspicious Requests</h3>
+        <div class="number">{{ suspicious_requests }}</div>
+    </div>
+
+    <div class="card">
+        <h3>New Domains</h3>
+        <div class="number">{{ new_domains }}</div>
+    </div>
+
+</div>
+
+<h2>DNS History</h2>
+
+<table>
+
+<tr>
+    <th>Time</th>
+    <th>Domain</th>
+    <th>Response</th>
+    <th>Status</th>
+</tr>
+
+{% for row in records %}
+
+<tr>
+
+    <td>{{ row[0] }}</td>
+    <td>{{ row[1] }}</td>
+    <td>{{ row[2] }}</td>
+
+    <td>
+
+        {% if row[3] == "SAFE" %}
+            <span class="safe">SAFE</span>
+
+        {% elif row[3] == "SUSPICIOUS" %}
+            <span class="suspicious">SUSPICIOUS</span>
+
+        {% else %}
+            <span class="new">NEW</span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

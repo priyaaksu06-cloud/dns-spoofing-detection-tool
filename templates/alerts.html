@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta http-equiv="refresh" content="5">
+
+<title>Alerts</title>
+
+</head>
+
+<body>
+
+<h1>Suspicious DNS Records</h1>
+
+<table border="1">
+
+<tr>
+<th>Timestamp</th>
+<th>Domain</th>
+<th>Response</th>
+<th>Status</th>
+</tr>
+
+{% for row in records %}
+
+<tr>
+<td>{{ row[0] }}</td>
+<td>{{ row[1] }}</td>
+<td>{{ row[2] }}</td>
+<td>{{ row[3] }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

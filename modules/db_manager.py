@@ -3,47 +3,116 @@ from config import DATABASE_FILE
 
 
 def create_database():
+
     conn = sqlite3.connect(DATABASE_FILE)
     cursor = conn.cursor()
 
-    cursor.execute('''
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS trusted_dns (
-        domain TEXT PRIMARY KEY,
-        ip TEXT
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        domain TEXT,
+        ip TEXT,
+        UNIQUE(domain, ip)
     )
-    ''')
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS dns_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp TEXT,
+        domain TEXT,
+        response TEXT,
+        status TEXT
+    )
+    """)
 
     conn.commit()
     conn.close()
 
 
 def save_dns_record(domain, ip):
+
     conn = sqlite3.connect(DATABASE_FILE)
     cursor = conn.cursor()
 
-    cursor.execute('''
-    INSERT OR REPLACE INTO trusted_dns(domain, ip)
-    VALUES(?, ?)
-    ''', (domain, ip))
+    cursor.execute("""
+    INSERT OR IGNORE INTO trusted_dns(domain, ip)
+    VALUES (?, ?)
+    """, (domain, ip))
 
     conn.commit()
     conn.close()
 
 
-def get_trusted_ip(domain):
+def get_trusted_ips(domain):
+
     conn = sqlite3.connect(DATABASE_FILE)
     cursor = conn.cursor()
 
-    cursor.execute('''
-    SELECT ip FROM trusted_dns
-    WHERE domain=?
-    ''', (domain,))
+    cursor.execute("""
+    SELECT ip
+    FROM trusted_dns
+    WHERE domain = ?
+    """, (domain,))
 
-    result = cursor.fetchone()
+    results = cursor.fetchall()
 
     conn.close()
 
-    if result:
-        return result[0]
+    return [row[0] for row in results]
 
-    return None
+
+def save_history(timestamp, domain, response, status):
+
+    conn = sqlite3.connect(DATABASE_FILE)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT INTO dns_history (
+        timestamp,
+        domain,
+        response,
+        status
+    )
+    VALUES (?, ?, ?, ?)
+    """, (timestamp, domain, response, status))
+
+    conn.commit()
+    conn.close()
+
+
+def get_history():
+
+    conn = sqlite3.connect(DATABASE_FILE)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT timestamp, domain, response, status
+    FROM dns_history
+    ORDER BY id DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
+
+
+def get_alerts():
+
+    conn = sqlite3.connect(DATABASE_FILE)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT timestamp, domain, response, status
+    FROM dns_history
+    WHERE status='SUSPICIOUS'
+    ORDER BY id DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
