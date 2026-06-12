@@ -10,6 +10,7 @@ from modules.db_manager import (
 )
 
 from modules.alert_system import generate_alert
+from modules.resolver import verify_domain
 
 
 IGNORE_DOMAINS = [
@@ -74,19 +75,42 @@ def analyze_packet(packet):
 
         if len(trusted_ips) == 0:
 
-            save_dns_record(
-                domain,
-                response
-            )
+            # NEW DOMAIN — verify with multi-resolver before trusting
+            print(f"  New domain seen: {domain}. Running verification...")
+            result = verify_domain(domain)
 
-            save_history(
-                current_time,
-                domain,
-                response,
-                "NEW"
-            )
+            print(f"  Trust Level : {result['trust_level']}")
+            print(f"  Orgs Seen   : {result['orgs_seen']}")
+            print(f"  Reason      : {result['reason']}")
 
-            print("NEW DOMAIN")
+            if result["trust_level"] in ("HIGH", "MEDIUM"):
+
+                save_dns_record(
+                    domain,
+                    response
+                )
+
+                save_history(
+                    current_time,
+                    domain,
+                    response,
+                    "NEW"
+                )
+
+                print("NEW DOMAIN - VERIFIED")
+
+            else:
+
+                generate_alert(domain, "NONE", response)
+
+                save_history(
+                    current_time,
+                    domain,
+                    response,
+                    "SUSPICIOUS"
+                )
+
+                print("LOW TRUST - ALERT RAISED, NOT SAVED")
 
         elif response in trusted_ips:
 
@@ -101,19 +125,42 @@ def analyze_packet(packet):
 
         else:
 
-            save_dns_record(
-                domain,
-                response
-            )
+            # KNOWN DOMAIN, NEW IP — verify before learning
+            print(f"  Known domain {domain} returned new IP {response}. Verifying...")
+            result = verify_domain(domain)
 
-            save_history(
-                current_time,
-                domain,
-                response,
-                "SAFE"
-            )
+            print(f"  Trust Level : {result['trust_level']}")
+            print(f"  Orgs Seen   : {result['orgs_seen']}")
+            print(f"  Reason      : {result['reason']}")
 
-            print("NEW VALID IP LEARNED")
+            if result["trust_level"] in ("HIGH", "MEDIUM"):
+
+                save_dns_record(
+                    domain,
+                    response
+                )
+
+                save_history(
+                    current_time,
+                    domain,
+                    response,
+                    "SAFE"
+                )
+
+                print("NEW VALID IP LEARNED - VERIFIED")
+
+            else:
+
+                generate_alert(domain, str(trusted_ips), response)
+
+                save_history(
+                    current_time,
+                    domain,
+                    response,
+                    "SUSPICIOUS"
+                )
+
+                print("LOW TRUST - POSSIBLE SPOOFING, ALERT RAISED")
 
     except Exception as e:
 
