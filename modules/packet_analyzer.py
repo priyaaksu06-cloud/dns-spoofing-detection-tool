@@ -28,6 +28,7 @@ def is_ipv4(ip):
     try:
         ipaddress.IPv4Address(str(ip))
         return True
+
     except:
         return False
 
@@ -37,6 +38,7 @@ def should_ignore(domain):
     domain = domain.lower()
 
     for word in IGNORE_DOMAINS:
+
         if word in domain:
             return True
 
@@ -50,7 +52,9 @@ def analyze_packet(packet):
 
     try:
 
-        domain = packet[DNSRR].rrname.decode(errors="ignore").rstrip(".")
+        domain = packet[DNSRR].rrname.decode(
+            errors="ignore"
+        ).rstrip(".")
 
         response = str(packet[DNSRR].rdata)
 
@@ -70,7 +74,10 @@ def analyze_packet(packet):
 
         if len(trusted_ips) == 0:
 
-            save_dns_record(domain, response)
+            save_dns_record(
+                domain,
+                response
+            )
 
             save_history(
                 current_time,
@@ -109,4 +116,5 @@ def analyze_packet(packet):
             print("NEW VALID IP LEARNED")
 
     except Exception as e:
+
         print("Error:", e)
