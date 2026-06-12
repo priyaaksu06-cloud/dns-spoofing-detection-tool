@@ -1111,3 +1111,5 @@
 [2026-06-11 18:09:50.857802] DNS SPOOF DETECTED | Domain: chatgpt.com. | Trusted IP: 172.64.155.209 | Received IP: 104.18.32.47
 [2026-06-12 22:15:02.494275] DNS SPOOF DETECTED | Domain: google.com | Trusted IP: 142.251.153.119 | Received IP: 10.10.10.10
 [2026-06-12 23:53:27.406411] DNS SPOOF DETECTED | Domain: google.com | Trusted IP: 142.251.153.119 | Received IP: 10.10.10.10
+[2026-06-13 01:25:11.217812] DNS SPOOF DETECTED | Domain: google.com | Trusted IP: 142.251.153.119 | Received IP: 10.10.10.10
+[2026-06-13 01:33:58.434044] DNS SPOOF DETECTED | Domain: google.com | Trusted IP: 142.251.153.119 | Received IP: 10.10.10.10

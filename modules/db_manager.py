@@ -22,7 +22,9 @@ def create_database():
         timestamp TEXT,
         domain TEXT,
         response TEXT,
-        status TEXT
+        status TEXT,
+        org_info TEXT,
+        reason TEXT
     )
     """)
 
@@ -62,7 +64,7 @@ def get_trusted_ips(domain):
     return [row[0] for row in results]
 
 
-def save_history(timestamp, domain, response, status):
+def save_history(timestamp, domain, response, status, org_info="", reason=""):
 
     conn = sqlite3.connect(DATABASE_FILE)
     cursor = conn.cursor()
@@ -72,10 +74,12 @@ def save_history(timestamp, domain, response, status):
         timestamp,
         domain,
         response,
-        status
+        status,
+        org_info,
+        reason
     )
-    VALUES (?, ?, ?, ?)
-    """, (timestamp, domain, response, status))
+    VALUES (?, ?, ?, ?, ?, ?)
+    """, (timestamp, domain, response, status, org_info, reason))
 
     conn.commit()
     conn.close()
@@ -87,7 +91,7 @@ def get_history():
     cursor = conn.cursor()
 
     cursor.execute("""
-    SELECT timestamp, domain, response, status
+    SELECT timestamp, domain, response, status, org_info, reason
     FROM dns_history
     ORDER BY id DESC
     """)
@@ -105,7 +109,7 @@ def get_alerts():
     cursor = conn.cursor()
 
     cursor.execute("""
-    SELECT timestamp, domain, response, status
+    SELECT timestamp, domain, response, status, org_info, reason
     FROM dns_history
     WHERE status='SUSPICIOUS'
     ORDER BY id DESC

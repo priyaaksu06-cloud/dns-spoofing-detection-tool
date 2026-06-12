@@ -111,6 +111,8 @@
     <th>Domain</th>
     <th>Response</th>
     <th>Status</th>
+    <th>Org Info</th>
+    <th>Reason</th>
 </tr>
 
 {% for row in records %}
@@ -122,19 +124,17 @@
     <td>{{ row[2] }}</td>
 
     <td>
-
         {% if row[3] == "SAFE" %}
             <span class="safe">SAFE</span>
-
         {% elif row[3] == "SUSPICIOUS" %}
             <span class="suspicious">SUSPICIOUS</span>
-
         {% else %}
             <span class="new">NEW</span>
-
         {% endif %}
-
     </td>
+
+    <td>{{ row[4] or "—" }}</td>
+    <td>{{ row[5] or "—" }}</td>
 
 </tr>
 

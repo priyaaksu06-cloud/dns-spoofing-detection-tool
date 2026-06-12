@@ -85,16 +85,15 @@ def analyze_packet(packet):
 
             if result["trust_level"] in ("HIGH", "MEDIUM"):
 
-                save_dns_record(
-                    domain,
-                    response
-                )
+                save_dns_record(domain, response)
 
                 save_history(
                     current_time,
                     domain,
                     response,
-                    "NEW"
+                    "NEW",
+                    org_info=str(result['orgs_seen']),
+                    reason=result['reason']
                 )
 
                 print("NEW DOMAIN - VERIFIED")
@@ -107,7 +106,9 @@ def analyze_packet(packet):
                     current_time,
                     domain,
                     response,
-                    "SUSPICIOUS"
+                    "SUSPICIOUS",
+                    org_info=str(result['orgs_seen']),
+                    reason=result['reason']
                 )
 
                 print("LOW TRUST - ALERT RAISED, NOT SAVED")
@@ -135,16 +136,15 @@ def analyze_packet(packet):
 
             if result["trust_level"] in ("HIGH", "MEDIUM"):
 
-                save_dns_record(
-                    domain,
-                    response
-                )
+                save_dns_record(domain, response)
 
                 save_history(
                     current_time,
                     domain,
                     response,
-                    "SAFE"
+                    "SAFE",
+                    org_info=str(result['orgs_seen']),
+                    reason=result['reason']
                 )
 
                 print("NEW VALID IP LEARNED - VERIFIED")
@@ -157,7 +157,9 @@ def analyze_packet(packet):
                     current_time,
                     domain,
                     response,
-                    "SUSPICIOUS"
+                    "SUSPICIOUS",
+                    org_info=str(result['orgs_seen']),
+                    reason=result['reason']
                 )
 
                 print("LOW TRUST - POSSIBLE SPOOFING, ALERT RAISED")

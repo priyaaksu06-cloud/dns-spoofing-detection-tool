@@ -20,6 +20,8 @@
 <th>Domain</th>
 <th>Response</th>
 <th>Status</th>
+<th>Org Info</th>
+<th>Reason</th>
 </tr>
 
 {% for row in records %}
@@ -29,6 +31,8 @@
 <td>{{ row[1] }}</td>
 <td>{{ row[2] }}</td>
 <td>{{ row[3] }}</td>
+<td>{{ row[4] or "—" }}</td>
+<td>{{ row[5] or "—" }}</td>
 </tr>
 
 {% endfor %}

@@ -8,14 +8,8 @@ from auth.middleware import login_required
 
 app = Flask(__name__)
 
-# Required for signed session cookies (used by the auth module).
-# Replace with a strong, random value loaded from an environment
-# variable before any real deployment.
 app.secret_key = "CHANGE_ME_TO_A_RANDOM_SECRET_KEY"
 
-# Initialize the authentication user database (auth/users.db).
-# This is completely separate from database/trusted_dns.db and
-# does not affect any existing DNS detection logic or data.
 init_user_db()
 
 DATABASE = "database/trusted_dns.db"
@@ -54,31 +48,25 @@ def dashboard():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
-    cursor.execute(
-        "SELECT COUNT(*) FROM dns_history"
-    )
+    cursor.execute("SELECT COUNT(*) FROM dns_history")
     total_requests = cursor.fetchone()[0]
 
-    cursor.execute(
-        "SELECT COUNT(*) FROM dns_history WHERE status='SAFE'"
-    )
+    cursor.execute("SELECT COUNT(*) FROM dns_history WHERE status='SAFE'")
     safe_requests = cursor.fetchone()[0]
 
-    cursor.execute(
-        "SELECT COUNT(*) FROM dns_history WHERE status='SUSPICIOUS'"
-    )
+    cursor.execute("SELECT COUNT(*) FROM dns_history WHERE status='SUSPICIOUS'")
     suspicious_requests = cursor.fetchone()[0]
 
-    cursor.execute(
-        "SELECT COUNT(*) FROM dns_history WHERE status='NEW'"
-    )
+    cursor.execute("SELECT COUNT(*) FROM dns_history WHERE status='NEW'")
     new_domains = cursor.fetchone()[0]
 
     cursor.execute("""
     SELECT timestamp,
            domain,
            response,
-           status
+           status,
+           org_info,
+           reason
     FROM dns_history
     ORDER BY id DESC
     LIMIT 100
@@ -109,7 +97,9 @@ def alerts():
     SELECT timestamp,
            domain,
            response,
-           status
+           status,
+           org_info,
+           reason
     FROM dns_history
     WHERE status='SUSPICIOUS'
     ORDER BY id DESC
