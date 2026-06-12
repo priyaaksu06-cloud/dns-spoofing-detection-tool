@@ -1109,3 +1109,4 @@
 [2026-06-11 18:09:06.190772] DNS SPOOF DETECTED | Domain: static.doubleclick.net. | Trusted IP: 2404:6800:4007:830::2006 | Received IP: 142.250.205.6
 [2026-06-11 18:09:50.814923] DNS SPOOF DETECTED | Domain: chatgpt.com. | Trusted IP: 172.64.155.209 | Received IP: 2606:4700:9c62:7dbb:27dd:4cc:5ff2:75c4
 [2026-06-11 18:09:50.857802] DNS SPOOF DETECTED | Domain: chatgpt.com. | Trusted IP: 172.64.155.209 | Received IP: 104.18.32.47
+[2026-06-12 22:15:02.494275] DNS SPOOF DETECTED | Domain: google.com | Trusted IP: 142.251.153.119 | Received IP: 10.10.10.10

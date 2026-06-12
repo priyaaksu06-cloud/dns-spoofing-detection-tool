@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login - DNS Spoofing Dashboard</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#f4f4f4;
+            padding:30px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            height:100vh;
+            margin:0;
+        }
+
+        .login-box{
+            background:white;
+            padding:40px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+            width:300px;
+            text-align:center;
+        }
+
+        .login-box h1{
+            font-size:18px;
+            margin-bottom:5px;
+        }
+
+        .login-box h2{
+            font-size:14px;
+            color:#666;
+            margin-top:0;
+            margin-bottom:20px;
+        }
+
+        .login-box form{
+            display:flex;
+            flex-direction:column;
+            text-align:left;
+        }
+
+        .login-box label{
+            font-size:13px;
+            margin-bottom:4px;
+            margin-top:12px;
+        }
+
+        .login-box input{
+            padding:8px;
+            border:1px solid #ccc;
+            border-radius:5px;
+            font-size:14px;
+        }
+
+        .login-box button{
+            margin-top:20px;
+            padding:10px;
+            background:#007bff;
+            color:white;
+            border:none;
+            border-radius:5px;
+            font-size:14px;
+            cursor:pointer;
+        }
+
+        .login-box button:hover{
+            background:#0056b3;
+        }
+
+        .error{
+            background:#fdecea;
+            color:#b71c1c;
+            border:1px solid #f5c2c0;
+            padding:8px;
+            border-radius:5px;
+            font-size:13px;
+            margin-bottom:10px;
+        }
+
+        .hint{
+            margin-top:15px;
+            font-size:11px;
+            color:#999;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="login-box">
+        <h1>DNS Spoofing Detection Tool</h1>
+        <h2>Sign in to continue</h2>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('login_page') }}">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password">
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="hint">Default: admin / admin123</p>
+    </div>
+
+</body>
+</html>
